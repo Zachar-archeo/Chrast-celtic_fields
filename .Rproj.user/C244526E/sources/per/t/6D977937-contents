@@ -1,0 +1,28 @@
+# Load required libraries
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(readxl)
+
+# Load data (replace "data.csv" with your own data file name)
+data <- read_excel ("D:/13_R_projects/Chrast/source data/xrfData.xlsx")
+
+
+xrfData_long <- xrfData %>% 
+          pivot_longer(cols = 7:12, names_to = "elements", values_to = "value")
+
+
+# Create a box plot for each group
+xrfData_long %>% 
+  drop_na()%>% 
+ #filter(sektor!= as.factor("D"))%>% 
+    ggplot(aes(x = sektor, y = value)) +
+      geom_boxplot(notch = FALSE) +
+     #stat_summary(fun.y = "mean", color = "white", geom = "point")+  # if you wan to add mean value into boxplot
+      labs(x = "sampling area",
+           y = "ppm") +
+      facet_wrap(~elements, scales = "free_y")+
+     #coord_flip()+ # if you wan to flip coordinates (axis)
+      theme_bw () 
+     
+  

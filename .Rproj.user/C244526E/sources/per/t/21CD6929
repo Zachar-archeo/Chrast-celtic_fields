@@ -1,0 +1,24 @@
+{
+    "id": "21CD6929",
+    "path": "D:/08_GIS_ovna/scripts/R_projects/R_scripts/kmean_cluster_on_PCA_fviz2.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "2400228726",
+    "contents": "",
+    "dirty": false,
+    "created": 1704414125388.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1682217554,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1682217554,
+    "read_only": false,
+    "read_only_alternatives": []
+}

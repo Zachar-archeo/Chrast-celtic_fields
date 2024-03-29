@@ -1,0 +1,27 @@
+{
+    "id": "173B25F8",
+    "path": "D:/13_R_projects/Chrast/scripts/Pearson_corr_correlgram_AB_data.R",
+    "project_path": "scripts/Pearson_corr_correlgram_AB_data.R",
+    "type": "r_source",
+    "hash": "3763460607",
+    "contents": "",
+    "dirty": false,
+    "created": 1692122414847.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "9,10",
+        "scrollLine": "0",
+        "notebook_format": "html_document"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1703731527,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1703731527414,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,59 @@
+# Load the required packages
+library(tidyverse)
+library(factoextra)
+library(devtools)
+
+# load dataset
+Wine <- read_csv("Wine.csv") # load your own data
+
+# standardize continuous variables
+data <- Wine %>% select(-Obs, -Country) %>% scale()
+
+# perform PCA
+pca_res <- prcomp(data,center = TRUE, scale = TRUE)
+
+# extract dimensions and their contribution to variance
+variance <- pca_res$sdev^2 / sum(pca_res$sdev^2)
+dim_var <- data.frame(Dimension = paste0("Dim", 1:length(variance)), 
+                      Variance = variance)
+
+# Get PCA variable loadings
+var_loadings <- pca_res[["rotation"]]
+
+# Get PCA scores
+pca_scores <- pca_res[["x"]] 
+Wine$PC1 <- pca_res$x[,1]
+Wine$PC2 <- pca_res$x[,2]
+
+# Perform k-means clustering on the first three principal components
+km <- kmeans(pca_res$x[,1:2], centers = 4, iter.max = 100, nstart = 100)
+
+# add cluster assignments to Wine dataframe
+Wine$cluster <- km$cluster
+
+# determine and visualize optimal number of clusters
+fviz_nbclust(pca_res$x, kmeans, method = "wss") 
+fviz_nbclust(pca_res$x, kmeans, method = "silhouette")
+fviz_nbclust(pca_res$x, kmeans, method = "gap_stat") 
+
+# create cluster biplot with PCA dimensions
+cluster_plot <- fviz_cluster(km, 
+                             data = pca_res$x[,1:2],
+                             ellipse = TRUE,
+                             ellipse.type = "convex",
+                             ellipse.level = 0.95,
+                             ellipse.alpha = 0.2,
+                             ggtheme = theme_grey(),
+                             main = "Cluster plot PCA",
+                             xlab = "Dim1",
+                             ylab = "Dim2",
+                             labelsize = 12)
+
+# Visualize variable loadings
+fviz_pca_var(pca_res, col.var="contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE)
+
+
+
+

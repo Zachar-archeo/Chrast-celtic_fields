@@ -1,0 +1,75 @@
+# Load the required packages
+library(tidyverse)
+library(factoextra)
+library(devtools)
+library(readxl)
+
+# load dataset
+Wine <- read_csv("Wine.csv") # load your own data
+
+# standardize continuous variables
+data <- Wine %>% select(-Obs, -Country) %>% scale()
+
+# perform PCA
+pca_res <- prcomp(data,center = TRUE, scale = TRUE)
+
+# extract dimensions and their contribution to variance
+variance <- pca_res$sdev^2 / sum(pca_res$sdev^2)
+dim_var <- data.frame(Dimension = paste0("Dim", 1:length(variance)), 
+                      Variance = variance)
+
+# Get PCA variable loadings
+var_loadings <- as.data.frame (pca_res[["rotation"]])
+fviz_contrib(pca_res, choice = "var",axes = 1, top = 4)
+fviz_contrib(pca_res, choice = "var",axes = 2, top = 4)
+
+# Get PCA scores
+pca_scores <- as.data.frame (pca_res[["x"]]) 
+Wine$PC1 <- pca_res$x[,1]
+Wine$PC2 <- pca_res$x[,2]
+
+# Perform k-means clustering on the first two principal components
+km <- kmeans(pca_res$x[,1:2], centers = 3, iter.max = 100, nstart = 100)
+
+# add cluster assignments to Wine dataframe
+Wine$cluster <- km$cluster
+
+# determine and visualize optimal number of clusters
+fviz_nbclust(pca_res$x, kmeans, method = "wss") 
+fviz_nbclust(pca_res$x, kmeans, method = "silhouette")
+fviz_nbclust(pca_res$x, kmeans, method = "gap_stat") 
+
+# K mean clustering - create cluster biplot with PCA dimensions
+cluster_plot <- fviz_cluster(km, 
+                             data = pca_res$x[,1:2],
+                             ellipse = TRUE,
+                             ggtheme = theme_grey())
+
+# PCA plot -Visualize variable loadings
+PCA_vars <- fviz_pca_var(pca_res, col.var="contrib",
+                         gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                         repel = TRUE)
+
+# PCA plot -Visualize individuals/observations
+PCA_indivs <- fviz_pca_ind(pca_res,
+                           pointsize = 2,
+                           label="none", # use to avoid displaying row numbers
+                           habillage = as.factor (Wine$cluster),
+                           addEllipses = TRUE,
+                           ellipse.type = "convex",
+                           repel = TRUE,
+                           ggtheme = theme_grey())+ 
+                           scale_color_manual (values=c("red", "orange", "blue", "black"))+
+           # Add labels for each point with the "Country" variable
+                           geom_text(aes(label = Wine$Country), 
+                                     size = 3, 
+                                     nudge_x = 0.1, 
+                                     nudge_y = 0.08)+
+                            labs(title = "PCA",
+                                 colour = "clusters",
+                                 shape = "clusters")
+                        
+ 
+
+ 
+

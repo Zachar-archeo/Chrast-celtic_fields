@@ -3,4 +3,4 @@ R scripts for computing descriptive statistics of geochemical analysis of soil p
 Folder structure:
 1. scripts - scripts in R code
 2. source data - raw geochemical data
-3. output - plots after running R code scrpits in "scripts" folder
+3. output - plots after running R code scripts in "scripts" folder
